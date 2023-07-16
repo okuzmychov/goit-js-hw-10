@@ -1,4 +1,9 @@
 import { fetchBreeds, fetchCatByBreed } from "./cat-api.js";
+import SlimSelect from 'slim-select';
+
+new SlimSelect({
+  select: '#selectElement'
+})
 
 fetchBreeds()
   .then((breeds) => {
