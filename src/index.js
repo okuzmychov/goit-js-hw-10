@@ -1,36 +1,42 @@
-import axios from "axios";
 import { fetchBreeds, fetchCatByBreed } from "./cat-api.js";
-
-const apiKey = "live_hpDxNWtuIHgI2hQ0umNyMz8MUXCLnpLObNOexE0JM5utYSQTKqi74y84ybiTShfK";
-
-axios.defaults.headers.common["x-api-key"] = apiKey;
 
 fetchBreeds()
   .then((breeds) => {
-    for (let i = 0; i < breeds.length; i++) {
-      const breed = breeds[i];
+    const breedSelect = document.querySelector(".breed-select");
+
+    breeds.forEach((breed) => {
       let option = document.createElement("option");
-      option.value = i;
+      option.value = breed.id;
       option.innerHTML = breed.name;
-      document.querySelector(".breed-select").appendChild(option);
-    }
-    showBreedImage(0, breeds);
+      breedSelect.appendChild(option);
+    });
+
+    breedSelect.addEventListener("change", (event) => {
+      const breedId = event.target.value;
+      showBreedImage(breedId);
+    });
+
+    showBreedImage(breeds[0].id);
   })
   .catch((error) => {
     console.log(error);
   });
 
-function showBreedImage(index, breeds) {
-  fetchCatByBreed(breeds[index].id)
+function showBreedImage(breedId) {
+  fetchCatByBreed(breedId)
     .then((catData) => {
-      const breedImage = document.querySelector("#breed_image");
-      breedImage.src = catData?.url;
-      breedImage.alt = "Breed Image";
-      document.getElementById("breed_json").textContent = catData?.temperament;
-      document.getElementById("wiki_link").href = catData?.wikipedia_url;
-      document.getElementById("wiki_link").innerHTML = catData?.wikipedia_url;
+      const breedImage = document.getElementById("breed_image");
+      breedImage.src = catData.url;
+
+      const breedJson = document.getElementById("breed_json");
+      breedJson.textContent = catData.description;
+
+      const wikiLink = document.getElementById("wiki_link");
+      wikiLink.href = catData.wikipedia_url;
+      wikiLink.innerHTML = catData.wikipedia_url;
     })
     .catch((error) => {
       console.log(error);
     });
 }
+
