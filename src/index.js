@@ -23,7 +23,9 @@ fetchBreeds()
 function showBreedImage(index, breeds) {
   fetchCatByBreed(breeds[index].id)
     .then((catData) => {
-      document.getElementById("breed_image").src = catData?.url;
+      const breedImage = document.querySelector("#breed_image");
+      breedImage.src = catData?.url;
+      breedImage.alt = "Breed Image";
       document.getElementById("breed_json").textContent = catData?.temperament;
       document.getElementById("wiki_link").href = catData?.wikipedia_url;
       document.getElementById("wiki_link").innerHTML = catData?.wikipedia_url;
