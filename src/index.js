@@ -1,47 +1,46 @@
-import { fetchBreeds, fetchCatByBreed } from "./cat-api.js";
+import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 import SlimSelect from 'slim-select';
 
 new SlimSelect({
-  select: '#selectElement'
-})
+  select: '#selectElement',
+});
 
 fetchBreeds()
-  .then((breeds) => {
-    const breedSelect = document.querySelector(".breed-select");
+  .then(breeds => {
+    const breedSelect = document.querySelector('.breed-select');
 
-    breeds.forEach((breed) => {
-      let option = document.createElement("option");
+    breeds.forEach(breed => {
+      let option = document.createElement('option');
       option.value = breed.id;
       option.innerHTML = breed.name;
       breedSelect.appendChild(option);
     });
 
-    breedSelect.addEventListener("change", (event) => {
+    breedSelect.addEventListener('change', event => {
       const breedId = event.target.value;
       showBreedImage(breedId);
     });
 
     showBreedImage(breeds[0].id);
   })
-  .catch((error) => {
+  .catch(error => {
     console.log(error);
   });
 
 function showBreedImage(breedId) {
   fetchCatByBreed(breedId)
-    .then((catData) => {
-      const breedImage = document.getElementById("breed_image");
+    .then(catData => {
+      const breedImage = document.getElementById('breed_image');
       breedImage.src = catData.url;
 
-      const breedJson = document.getElementById("breed_json");
-      breedJson.textContent = catData.description;
+      const breedJson = document.getElementById('breed_json');
+      breedJson.textContent = catData.breeds[0].description;
 
-      const wikiLink = document.getElementById("wiki_link");
+      const wikiLink = document.getElementById('wiki_link');
       wikiLink.href = catData.wikipedia_url;
       wikiLink.innerHTML = catData.wikipedia_url;
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error);
     });
 }
-
