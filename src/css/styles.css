@@ -1,12 +1,18 @@
+body {
+  background-color: rgb(63, 62, 71);
+  color: #ffffff;
+}
 .loader {
   font-size: 10px;
   width: 1em;
   height: 1em;
   border-radius: 50%;
-  position: relative;
+  position: absolute;
   text-indent: -9999em;
   animation: mulShdSpin 1.1s infinite ease;
   transform: translateZ(0);
+  left: 50%;
+  top: 50%;
 }
 @keyframes mulShdSpin {
   0%,

@@ -1,46 +1,69 @@
 import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 import SlimSelect from 'slim-select';
+import 'slim-select/dist/slimselect.css';
 
-new SlimSelect({
-  select: '#selectElement',
-});
+document.addEventListener('DOMContentLoaded', () => {
+  const breedSelect = document.getElementById('breed_select');
+  const loader = document.getElementById('loader');
 
-fetchBreeds()
-  .then(breeds => {
-    const breedSelect = document.querySelector('.breed-select');
+  breedSelect.innerHTML = '<option disabled selected>Виберіть породу</option>';
 
-    breeds.forEach(breed => {
-      let option = document.createElement('option');
-      option.value = breed.id;
-      option.innerHTML = breed.name;
-      breedSelect.appendChild(option);
-    });
+  let slimSelect;
 
-    breedSelect.addEventListener('change', event => {
-      const breedId = event.target.value;
-      showBreedImage(breedId);
-    });
+  fetchBreeds()
+    .then(breeds => {
+      breeds.forEach(breed => {
+        let option = document.createElement('option');
+        option.value = breed.id;
+        option.textContent = breed.name;
+        breedSelect.appendChild(option);
+      });
 
-    showBreedImage(breeds[0].id);
-  })
-  .catch(error => {
-    console.log(error);
-  });
+      slimSelect = new SlimSelect({
+        select: breedSelect,
+        placeholder: 'Виберіть породу',
+        showSearch: false
+      });
 
-function showBreedImage(breedId) {
-  fetchCatByBreed(breedId)
-    .then(catData => {
-      const breedImage = document.getElementById('breed_image');
-      breedImage.src = catData.url;
+      breedSelect.addEventListener('change', event => {
+        const breedId = event.target.value;
+        showBreedImage(breedId);
+      });
 
-      const breedJson = document.getElementById('breed_json');
-      breedJson.textContent = catData.breeds[0].description;
-
-      const wikiLink = document.getElementById('wiki_link');
-      wikiLink.href = catData.wikipedia_url;
-      wikiLink.innerHTML = catData.wikipedia_url;
+      showBreedImage(breeds[0].id);
     })
     .catch(error => {
       console.log(error);
     });
-}
+
+  function showBreedImage(breedId) {
+    if (loader) {
+      loader.style.display = 'block';
+    }
+
+    breedSelect.disabled = true;
+
+    fetchCatByBreed(breedId)
+      .then(catData => {
+        const breedImage = document.getElementById('breed_image');
+        breedImage.src = catData.url;
+
+        const breedJson = document.getElementById('breed_json');
+        breedJson.textContent = catData.breeds[0].description || 'Description not available';
+
+        const wikiLink = document.getElementById('wiki_link');
+        wikiLink.href = catData.wikipedia_url;
+        wikiLink.innerHTML = catData.wikipedia_url;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {
+        if (loader) {
+          loader.style.display = 'none';
+        }
+
+        breedSelect.disabled = false;
+      });
+  }
+});
