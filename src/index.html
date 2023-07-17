@@ -11,10 +11,17 @@
     <!-- <p class="loader">Loading data, please wait...</p> -->
     <!-- <p class="error">Oops! Something went wrong! Try reloading the page!</p> -->
     <div class="cat-info">
-      <img id="breed_image" alt="Breed Image" width="400">
-       <p id="breed_json"></p>
-       <a id="wiki_link" href=""></a>
+      <img id="breed_image" alt="Breed Image" width="400" />
+      <p id="breed_json"></p>
+      <a id="wiki_link" href=""></a>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.2.0/slimselect.min.js"></script>
+
+    <script>
+      new SlimSelect({
+        select: '#selectElement',
+      });
+    </script>
 
     <script src="index.js" type="module"></script>
   </body>
