@@ -2,6 +2,9 @@ body {
   background-color: rgb(63, 62, 71);
   color: #ffffff;
 }
+.cat-info {
+  display: flex;
+}
 .loader {
   font-size: 10px;
   width: 1em;
