@@ -40,8 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <h2>Temperament</h2>
           <p>${breedData.temperament || 'Temperament not available'}</p>
         `;
-          // wikiLink.href = catData.wikipedia_url;
-          // wikiLink.innerHTML = catData.wikipedia_url;
         } else {
           catInfo.textContent = 'No data available for this breed';
         }
