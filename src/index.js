@@ -4,14 +4,61 @@ import 'slim-select/dist/slimselect.css';
 
 document.addEventListener('DOMContentLoaded', () => {
   const breedSelect = document.getElementById('breed_select');
-  const loader = document.getElementById('loader');
-
-  breedSelect.innerHTML = '<option disabled selected>Виберіть породу</option>';
+  const catImage = document.getElementById('breed_image');
+  const catInfo = document.getElementById('breed_json');
+  const wikiLink = document.getElementById('wiki_link');
+  const loader = document.querySelector('.loader');
+  const catError = document.querySelector('.error');
 
   let slimSelect;
 
+  function showLoader(show) {
+    loader.style.display = show ? 'block' : 'none';
+  }
+
+  function showError(show) {
+    catError.style.display = show ? 'block' : 'none';
+  }
+
+  function showBreedImage(breedId) {
+    showLoader(true);
+    breedSelect.disabled = true;
+    catImage.src = '';
+    catInfo.textContent = '';
+    wikiLink.href = '';
+
+    fetchCatByBreed(breedId)
+      .then(catData => {
+        if (catData.breeds.length > 0) {
+          const breedData = catData.breeds[0];
+          catImage.src = catData.url;
+          const breedNameElement = document.createElement('h2');
+          breedNameElement.textContent = breedData.name;
+          catInfo.appendChild(breedNameElement);
+          catInfo.innerHTML += `
+          <p>${breedData.description || 'Description not available'}</p>
+          <h2>Temperament</h2>
+          <p>${breedData.temperament || 'Temperament not available'}</p>
+        `;
+          // wikiLink.href = catData.wikipedia_url;
+          // wikiLink.innerHTML = catData.wikipedia_url;
+        } else {
+          catInfo.textContent = 'No data available for this breed';
+        }
+      })
+      .catch(() => {
+        showError(true);
+      })
+      .finally(() => {
+        showLoader(false);
+        breedSelect.disabled = false;
+      });
+  }
+
   fetchBreeds()
     .then(breeds => {
+      breedSelect.innerHTML =
+        '<option disabled selected>Виберіть породу</option>';
       breeds.forEach(breed => {
         let option = document.createElement('option');
         option.value = breed.id;
@@ -22,48 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
       slimSelect = new SlimSelect({
         select: breedSelect,
         placeholder: 'Виберіть породу',
-        showSearch: false
+        showSearch: false,
       });
 
       breedSelect.addEventListener('change', event => {
         const breedId = event.target.value;
         showBreedImage(breedId);
       });
-
-      showBreedImage(breeds[0].id);
     })
     .catch(error => {
       console.log(error);
     });
-
-  function showBreedImage(breedId) {
-    if (loader) {
-      loader.style.display = 'block';
-    }
-
-    breedSelect.disabled = true;
-
-    fetchCatByBreed(breedId)
-      .then(catData => {
-        const breedImage = document.getElementById('breed_image');
-        breedImage.src = catData.url;
-
-        const breedJson = document.getElementById('breed_json');
-        breedJson.textContent = catData.breeds[0].description || 'Description not available';
-
-        const wikiLink = document.getElementById('wiki_link');
-        wikiLink.href = catData.wikipedia_url;
-        wikiLink.innerHTML = catData.wikipedia_url;
-      })
-      .catch(error => {
-        console.log(error);
-      })
-      .finally(() => {
-        if (loader) {
-          loader.style.display = 'none';
-        }
-
-        breedSelect.disabled = false;
-      });
-  }
 });
