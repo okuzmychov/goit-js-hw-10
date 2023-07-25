@@ -67,7 +67,7 @@ breedSelect.addEventListener('change', evt => {
       );
       Notiflix.Loading.remove(delay);
       const markup = `
-        <div class="container" style="display: flex;">
+        <div class="container">
 
             <div class="thumb-pic">
                 <img src="${cat.url}" alt="${cat.id}" width="400" />

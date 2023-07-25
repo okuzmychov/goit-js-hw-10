@@ -7,19 +7,10 @@ img {
   width: 500px;
 }
 
-/* .cat_descript {
-  width: 740px;
-  font-size: large;
-} */
-
 .container {
   display: flex;
-  margin-top: 28px;
+  margin-top: 20px;
 }
-
-/* .cat_photo {
-  margin-right: 20px;
-} */
 
 .breed-select {
     margin-top: 10px;
