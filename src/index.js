@@ -12,16 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   errorText.hidden = true;
   select.style.display = 'none';
-
+  errorText.style.display = 'none';
+  
   axios.defaults.headers.common['x-api-key'] =
     'live_hpDxNWtuIHgI2hQ0umNyMz8MUXCLnpLObNOexE0JM5utYSQTKqi74y84ybiTShfK';
   axios.defaults.baseURL = 'https://api.thecatapi.com/v1/';
 
-  window.addEventListener('load', () => {
-  setTimeout(() => {
-    select.style.display = 'block';
-  }, 2000);
-  });
+  // window.addEventListener('load', () => {
+  // setTimeout(() => {
+  //   select.style.display = 'block';
+  // }, 2000);
+  // });
   
   fetchBreeds()
     .then(response => {
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return `<option class="option" value="${id}">${name}</option>`;
         })
         .join('');
+        select.style.display = 'block';
         slimSelect = new SlimSelect({
         select: '#single',
         settings: {
