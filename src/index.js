@@ -11,11 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const select = document.querySelector('.breed-select');
 
   errorText.hidden = true;
+  catInfoDiv.style.display = 'none';
 
   axios.defaults.headers.common['x-api-key'] =
     'live_hpDxNWtuIHgI2hQ0umNyMz8MUXCLnpLObNOexE0JM5utYSQTKqi74y84ybiTShfK';
   axios.defaults.baseURL = 'https://api.thecatapi.com/v1/';
 
+  window.addEventListener('load', () => {
+  setTimeout(() => {
+    catInfoDiv.style.display = 'block';
+  }, 2000);
+  });
+  
   fetchBreeds()
     .then(response => {
       select.hidden = false;
@@ -24,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return `<option class="option" value="${id}">${name}</option>`;
         })
         .join('');
-      slimSelect = new SlimSelect({
+        slimSelect = new SlimSelect({
         select: '#single',
         settings: {
           showSearch: false,
@@ -32,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
           searchPlaceholder: 'Search for the good stuff!',
           searchHighlight: true,
         },
-        events: {
+          events: {
           afterChange: newVal => {
             loaderText.hidden = false;
             catInfoDiv.innerHTML = '';
