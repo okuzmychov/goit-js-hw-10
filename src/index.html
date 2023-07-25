@@ -3,22 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/styles.css" />
-    <!-- <link rel="stylesheet" href="./css/media.css" /> -->
     <title>Homework 10</title>
+    <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <span class="loader"></span>
-    <select id="breed_select">
-      <option disabled selected>Виберіть породу</option>
-    </select>
-    <!-- <p class="loader">Loading data, please wait...</p> -->
-    <!-- <p class="error">Oops! Something went wrong! Try reloading the page!</p> -->
-    <div class="cat-info">
-      <img id="breed_image" alt="Breed Image" width="600" />
-      <p id="breed_json" class="info-cat"></p>
-      <a id="wiki_link" href=""></a>
-    </div>
+    <select id="single" class="breed-select"></select>
+
+    <p class="loader">Loading data, please wait...</p>
+    <p class="error">Oops! Something went wrong! Try reloading the page!</p>
+    <div class="cat-info container"></div>
 
     <script src="index.js" type="module"></script>
   </body>

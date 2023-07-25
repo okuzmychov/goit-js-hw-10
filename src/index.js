@@ -1,81 +1,68 @@
-import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
+import { fetchBreeds, fetchCatByBreed } from './cat-api';
+import axios from 'axios';
 import SlimSelect from 'slim-select';
 import 'slim-select/dist/slimselect.css';
+import Notiflix from 'notiflix';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const breedSelect = document.getElementById('breed_select');
-  const catImage = document.getElementById('breed_image');
-  const catInfo = document.getElementById('breed_json');
-  const wikiLink = document.getElementById('wiki_link');
-  const loader = document.querySelector('.loader');
-  const catError = document.querySelector('.error');
+  const catInfoDiv = document.querySelector('.cat-info.container');
+  const errorText = document.querySelector('.error');
+  const loaderText = document.querySelector('.loader');
+  const select = document.querySelector('.breed-select');
 
-  let slimSelect;
+  errorText.hidden = true;
 
-  function showLoader(show) {
-    loader.style.display = show ? 'block' : 'none';
-  }
-
-  function showError(show) {
-    catError.style.display = show ? 'block' : 'none';
-  }
-
-  function showBreedImage(breedId) {
-    showLoader(true);
-    breedSelect.disabled = true;
-    catImage.src = '';
-    catInfo.textContent = '';
-    wikiLink.href = '';
-
-    fetchCatByBreed(breedId)
-      .then(catData => {
-        if (catData.breeds.length > 0) {
-          const breedData = catData.breeds[0];
-          catImage.src = catData.url;
-          const breedNameElement = document.createElement('h2');
-          breedNameElement.textContent = breedData.name;
-          catInfo.appendChild(breedNameElement);
-          catInfo.innerHTML += `
-          <p>${breedData.description || 'Description not available'}</p>
-          <h2>Temperament</h2>
-          <p>${breedData.temperament || 'Temperament not available'}</p>
-        `;
-        } else {
-          catInfo.textContent = 'No data available for this breed';
-        }
-      })
-      .catch(() => {
-        showError(true);
-      })
-      .finally(() => {
-        showLoader(false);
-        breedSelect.disabled = false;
-      });
-  }
+  axios.defaults.headers.common['x-api-key'] =
+    'live_hpDxNWtuIHgI2hQ0umNyMz8MUXCLnpLObNOexE0JM5utYSQTKqi74y84ybiTShfK';
+  axios.defaults.baseURL = 'https://api.thecatapi.com/v1/';
 
   fetchBreeds()
-    .then(breeds => {
-      breedSelect.innerHTML =
-        '<option disabled selected>Виберіть породу</option>';
-      breeds.forEach(breed => {
-        let option = document.createElement('option');
-        option.value = breed.id;
-        option.textContent = breed.name;
-        breedSelect.appendChild(option);
-      });
-
+    .then(response => {
+      select.hidden = false;
+      select.innerHTML = response
+        .map(({ id, name }) => {
+          return `<option class="option" value="${id}">${name}</option>`;
+        })
+        .join('');
       slimSelect = new SlimSelect({
-        select: breedSelect,
-        placeholder: 'Виберіть породу',
-        showSearch: false,
-      });
-
-      breedSelect.addEventListener('change', event => {
-        const breedId = event.target.value;
-        showBreedImage(breedId);
+        select: '#single',
+        settings: {
+          showSearch: false,
+          searchText: 'Sorry nothing to see here',
+          searchPlaceholder: 'Search for the good stuff!',
+          searchHighlight: true,
+        },
+        events: {
+          afterChange: newVal => {
+            loaderText.hidden = false;
+            catInfoDiv.innerHTML = '';
+            fetchCatByBreed(newVal[0].value)
+              .then(responce => {
+                catInfoDiv.innerHTML = responce
+                  .map(
+                    ({ url, breeds: [{ name, description, temperament }] }) => {
+                      return `
+                        <div class="cat_photo">
+                        <img src="${url}" alt="${name}">
+                        </div>
+                        <div class="cat_descript">
+            <h3>${name}</h3>
+            <p>${description}</p>
+            <p><b>Temperament:&nbsp</b>${temperament}</p></div>`;
+                    }
+                  )
+                  .join('');
+              })
+              .catch(() => {
+                Notiflix.Notify.failure(errorText.textContent);
+              })
+              .finally(() => (loaderText.hidden = true));
+          },
+        },
       });
     })
-    .catch(error => {
-      console.log(error);
-    });
+    .catch(() => {
+      Notiflix.Notify.failure(errorText.textContent);
+    })
+    .finally(() => (loaderText.hidden = true));
 });
