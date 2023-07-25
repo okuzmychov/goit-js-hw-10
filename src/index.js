@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const select = document.querySelector('.breed-select');
 
   errorText.hidden = true;
-  catInfoDiv.style.display = 'none';
+  select.style.display = 'none';
 
   axios.defaults.headers.common['x-api-key'] =
     'live_hpDxNWtuIHgI2hQ0umNyMz8MUXCLnpLObNOexE0JM5utYSQTKqi74y84ybiTShfK';
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('load', () => {
   setTimeout(() => {
-    catInfoDiv.style.display = 'block';
+    select.style.display = 'block';
   }, 2000);
   });
   
