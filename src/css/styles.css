@@ -1,21 +1,33 @@
 body {
   background-color: rgb(63, 62, 71);
   color: #ffffff;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 img {
   width: 500px;
 }
 
-.cat_descript {
+/* .cat_descript {
   width: 740px;
   font-size: large;
-}
+} */
 
 .container {
   display: flex;
   margin-top: 28px;
 }
 
-.cat_photo {
+/* .cat_photo {
   margin-right: 20px;
+} */
+
+.breed-select {
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.cat-info {
+    width: 810px;
+    margin-left: auto;
+    margin-right: auto;
 }
