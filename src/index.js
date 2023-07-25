@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const loaderText = document.querySelector('.loader');
   const select = document.querySelector('.breed-select');
   const delay = 2000;
-  errorText.hidden = true;
+  // errorText.hidden = true;
   select.style.display = 'none';
-  // errorText.style.display = 'none';
+
 
   axios.defaults.headers.common['x-api-key'] =
     'live_hpDxNWtuIHgI2hQ0umNyMz8MUXCLnpLObNOexE0JM5utYSQTKqi74y84ybiTShfK';
