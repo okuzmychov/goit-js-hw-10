@@ -9,20 +9,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorText = document.querySelector('.error');
   const loaderText = document.querySelector('.loader');
   const select = document.querySelector('.breed-select');
-
+  const delay = 2000;
   errorText.hidden = true;
   select.style.display = 'none';
-  errorText.style.display = 'none';
-  
+  // errorText.style.display = 'none';
+
   axios.defaults.headers.common['x-api-key'] =
     'live_hpDxNWtuIHgI2hQ0umNyMz8MUXCLnpLObNOexE0JM5utYSQTKqi74y84ybiTShfK';
   axios.defaults.baseURL = 'https://api.thecatapi.com/v1/';
 
-  // window.addEventListener('load', () => {
-  // setTimeout(() => {
-  //   select.style.display = 'block';
-  // }, 2000);
-  // });
+ Notiflix.Loading.custom('Завантажую...', {
+  customSvgUrl:
+    'https://notiflix.github.io/content/media/loading/notiflix-loading-nx-light.svg',
+});
+Notiflix.Loading.remove(delay);
   
   fetchBreeds()
     .then(response => {
