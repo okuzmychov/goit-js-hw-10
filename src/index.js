@@ -1,4 +1,3 @@
-import Notiflix from 'notiflix';
 import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 import SlimSelect from 'slim-select';
 import 'slim-select/dist/slimselect.css';
@@ -23,40 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showBreedImage(breedId) {
     showLoader(true);
-
     breedSelect.disabled = true;
     catImage.src = '';
     catInfo.textContent = '';
     wikiLink.href = '';
-
-    fetchBreeds()
-      .then(breeds => {
-        breedSelect.innerHTML =
-          '<option disabled selected>Виберіть породу</option>';
-        breeds.forEach(breed => {
-          let option = document.createElement('option');
-          option.value = breed.id;
-          option.textContent = breed.name;
-          breedSelect.appendChild(option);
-        });
-
-        slimSelect = new SlimSelect({
-          select: breedSelect,
-          placeholder: 'Виберіть породу',
-          showSearch: false,
-        });
-
-        breedSelect.addEventListener('change', event => {
-          const breedId = event.target.value;
-          showBreedImage(breedId);
-        });
-
-        showLoader(false);
-        breedSelect.style.display = 'block';
-      })
-      .catch(() => {
-        Notiflix.Report.failure('Щось пішло не так! Перезавантажте сторінку!');
-      });
 
     fetchCatByBreed(breedId)
       .then(catData => {
@@ -67,24 +36,46 @@ document.addEventListener('DOMContentLoaded', () => {
           breedNameElement.textContent = breedData.name;
           catInfo.appendChild(breedNameElement);
           catInfo.innerHTML += `
-            <p>${breedData.description || 'Description not available'}</p>
-            <h2>Temperament</h2>
-            <p>${breedData.temperament || 'Temperament not available'}</p>
-          `;
+          <p>${breedData.description || 'Description not available'}</p>
+          <h2>Temperament</h2>
+          <p>${breedData.temperament || 'Temperament not available'}</p>
+        `;
         } else {
           catInfo.textContent = 'No data available for this breed';
         }
       })
       .catch(() => {
-        Notiflix.Report.failure(
-          'Немає інформації про цього кота!',
-          '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Будь ласка оберіть іншу породу!',
-          'Okay'
-        );
+        showError(true);
       })
       .finally(() => {
         showLoader(false);
         breedSelect.disabled = false;
       });
   }
+
+  fetchBreeds()
+    .then(breeds => {
+      breedSelect.innerHTML =
+        '<option disabled selected>Виберіть породу</option>';
+      breeds.forEach(breed => {
+        let option = document.createElement('option');
+        option.value = breed.id;
+        option.textContent = breed.name;
+        breedSelect.appendChild(option);
+      });
+
+      slimSelect = new SlimSelect({
+        select: breedSelect,
+        placeholder: 'Виберіть породу',
+        showSearch: false,
+      });
+
+      breedSelect.addEventListener('change', event => {
+        const breedId = event.target.value;
+        showBreedImage(breedId);
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    });
 });
